@@ -1,5 +1,8 @@
 folder = ARGV[0]
 files = Dir["./#{folder}/input/*.txt"]
+output_file = nil
+expected = nil
+result = nil
 
 correct = files.all? do |file|
   test_number = file.match(/\d+/)
