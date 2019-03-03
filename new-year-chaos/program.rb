@@ -3,6 +3,17 @@
 require 'json'
 require 'stringio'
 
+def debug(actual, distance, index_diff, bribes)
+  if ENV['DEBUG'] == "true"
+    puts "actual #{actual}"
+    puts "distance #{distance}"
+    puts "index_diff #{index_diff}"
+    puts "bribes #{bribes}"
+    puts ""
+  end
+end
+
+
 # Complete the minimumBribes function below.
 def minimumBribes(q)
   q.each_with_index.inject(0) do |bribes, (actual, index)|
@@ -16,13 +27,7 @@ def minimumBribes(q)
       [index_diff, 0].max
     end
 
-    if ENV['DEBUG'] == "true"
-      puts "actual #{actual}"
-      puts "distance #{distance}"
-      puts "index_diff #{index_diff}"
-      puts "bribes #{bribes}"
-      puts ""
-    end
+    debug(actual, distance, index_diff, bribes)
 
     if distance > 2
       return "Too chaotic"
