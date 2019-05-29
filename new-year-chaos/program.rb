@@ -3,26 +3,32 @@
 require 'json'
 require 'stringio'
 
+def debug(actual, distance, index_diff, bribes)
+  if ENV['DEBUG'] == "true"
+    puts "actual #{actual}"
+    puts "distance #{distance}"
+    puts "index_diff #{index_diff}"
+    puts "bribes #{bribes}"
+    puts ""
+  end
+end
+
+
 # Complete the minimumBribes function below.
 def minimumBribes(q)
-  q.each_with_index.inject(0) do |bribes, (person, index)|
+  q.each_with_index.inject(0) do |bribes, (actual, index)|
     return bribes if q[index + 1].nil?
-    index_diff = person - index - 1
-    prev_org = person - 2
-    if index_diff <= 0 && prev_org >= 0
-      prev = index - 1
-      person_brive = prev_org.upto(prev).all? { |i| q[i] > person }
-      distance = person_brive ? 1 : 0
+
+    index_diff = actual - index - 1
+    maximun_distance = actual - 2
+    distance = if index_diff <= 0 && maximun_distance >= 0 then
+      q[maximun_distance...index].all? { |x| x > actual } ? 1 : 0
     else
-      distance = [index_diff, 0].max
+      [index_diff, 0].max
     end
-    if ENV['DEBUG'] == "true"
-      puts "person #{person}"
-      puts "distance #{distance}"
-      puts "index_diff #{index_diff}"
-      puts "bribes #{bribes}"
-      puts ""
-    end
+
+    debug(actual, distance, index_diff, bribes)
+
     if distance > 2
       return "Too chaotic"
       break
