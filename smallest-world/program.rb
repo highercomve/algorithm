@@ -3,31 +3,30 @@
 require 'json'
 require 'stringio'
 
-@weightsEnum = Enumerator.new do |y|
-  a = 1
-  b = (2 * a) + 1
-  26.times do |x|
-    y << a
-    a = b
-    b = ((x + 3) * a) + 1
-  end
-end
+start = {
+  a: 1,
+  b: 3,
+  values: [],
+  keys: {},
+}
 
-@letters = ('a'..'z').to_a
-
-@weights = @weightsEnum.each_with_index.inject({}) do |acc, (weight, index)|
-  acc[weight] = @letters[index]
+@weights = ('a'..'z').each_with_index.inject(start) do |acc, (letter, index)|
+  weight = acc[:a]
+  acc[:values].push(weight)
+  acc[:keys][weight] = letter
+  acc[:a] = acc[:b]
+  acc[:b] = ((index + 3) * acc[:a]) + 1
   acc
 end
 
 def convertSmallestNumber(number)
-  posibleValues = @weightsEnum.select {|x| x <= number }
+  posibleValues = @weights[:values].take_while {|x| x <= number }
   result = ''
   while number > 0 do
     letterWeight = posibleValues.last
     repeticions = number / letterWeight
     if (repeticions > 0) 
-      result += "#{@weights[letterWeight]}" * repeticions
+      result += "#{@weights[:keys][letterWeight]}" * repeticions
       number -= letterWeight * repeticions
     end
     posibleValues.pop
